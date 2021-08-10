@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <title>Adoptapet! 🐶</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -22,19 +23,29 @@
         </div>
     </nav>
     <h4 class="m-5 text-center">Adopta una mascota aquí 🐶</h4>
-    <div class="container">
-        <div class="card" style="width: 18rem;">
-            <span class="text-center" style="font-size: 4rem;">🐶</span>
-            <div class="card-body">
-                <h5 class="card-title">Firulais</h5>
-                <p class="card-text">Guau guau guau guau guau guau guau guauguau guau guau guau guau guau.</p>
-                <a href="#" class="btn btn-primary">Ver detalles</a>
-            </div>
-        </div>
-    </div>
+    <div class="container d-flex" id="petsContainer"></div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
         crossorigin="anonymous"></script>
+    <script>
+        $.getJSON("http://localhost:3000/v1/pets", function (pets) {
+            var container = $("#petsContainer")
+            var adopted = `<a href="#" class="btn btn-primary">Adoptar</a>`;
+            var notAdopted = `<a href="#" class="btn btn-danger disabled">Adoptado</a>`;
+            pets.forEach(function (pet) {
+                container.append(`
+                <div class="card m-2" style="width: 18rem;">
+                    <span class="text-center" style="font-size: 4rem;">${pet.kind === "dog" ? "🐶" : "🐱"} </span>
+                    <div class="card-body">
+                        <h5 class="card-title">${pet.name}</h5>
+                        <p class="card-text">Location: ${pet.location}</p>
+                        ${pet.adopted === "true" ? adopted : notAdopted}
+                    </div>
+                </div>
+                `)
+            });
+        })
+    </script>
 </body>
 
 </html>
